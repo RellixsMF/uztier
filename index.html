@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>Uz tiers</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#c9d1d9;font-family:'Inter',sans-serif}
+nav{background:#161b22;border-bottom:1px solid #21262d;display:flex;align-items:center;padding:0 28px;height:54px;gap:28px}
+.logo{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;display:flex}
+.logo .mc{color:#4ade80}.logo .t{color:#f97316}.logo .ie{color:#facc15}.logo .rs{color:#4ade80}
+nav a{color:#8b949e;text-decoration:none;font-size:14px;display:flex;align-items:center;gap:5px}
+nav a:hover{color:#e6edf3}
+.search{margin-left:auto;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:5px 12px;color:#8b949e;font-size:13px;width:200px;display:flex;align-items:center;gap:8px}
+.search input{background:none;border:none;outline:none;color:#c9d1d9;font-size:13px;width:150px}
+.tabs-bar{background:#161b22;border-bottom:1px solid #21262d;display:flex;padding:0 28px}
+.tab{display:flex;flex-direction:column;align-items:center;padding:10px 16px;font-size:12px;color:#8b949e;cursor:pointer;border-bottom:2px solid transparent;gap:4px;min-width:68px;text-decoration:none}
+.tab:hover{color:#c9d1d9}
+.tab.active{color:#e6edf3;border-bottom-color:#f97316}
+.tab-ico{font-size:18px}
+.container{max-width:1160px;margin:0 auto;padding:20px 28px}
+.topbar{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:14px}
+.info-btn{background:#1c2128;border:1px solid #30363d;border-radius:6px;padding:5px 10px;font-size:12px;color:#8b949e;display:flex;align-items:center;gap:5px;cursor:pointer}
+.server-badge{background:#1c2128;border:1px solid #30363d;border-radius:6px;padding:4px 10px;display:flex;align-items:center;gap:8px;font-size:11px;color:#8b949e}
+.server-badge strong{color:#e6edf3;font-size:11px}
+.pvp-badge{background:#d62828;color:#fff;font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px}
+table{width:100%;border-collapse:collapse}
+thead tr{border-bottom:1px solid #21262d}
+thead th{text-align:left;font-size:11px;font-weight:600;color:#8b949e;letter-spacing:.8px;text-transform:uppercase;padding:8px 12px}
+tbody tr{border-bottom:1px solid #161b22;transition:background .15s;cursor:pointer}
+tbody tr:hover{background:#1c2128}
+td{padding:10px 12px;vertical-align:middle}
+.rank-box{width:48px;height:48px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#e6edf3}
+.rank-1{background:linear-gradient(135deg,#b8860b,#ffd700);color:#1a1200}
+.rank-2{background:linear-gradient(135deg,#555,#aaa)}
+.rank-3{background:linear-gradient(135deg,#7b4000,#cd7f32)}
+.rank-other{background:#1c2128;border:1px solid #30363d}
+.player-cell{display:flex;align-items:center;gap:12px}
+.avatar{width:44px;height:44px;border-radius:4px;background:#30363d;overflow:hidden;flex-shrink:0}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.player-name{font-size:15px;font-weight:600;color:#e6edf3;display:block}
+.player-rank{font-size:12px;color:#8b949e;display:flex;align-items:center;gap:4px;margin-top:2px}
+.diamond-ico{color:#a78bfa;font-size:13px}
+.region-badge{padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.5px}
+.na{background:#1a3a5c;color:#60a5fa;border:1px solid #1e4a78}
+.eu{background:#1a3a2a;color:#4ade80;border:1px solid #1e5a34}
+.tiers-cell{display:flex;align-items:center;gap:4px;justify-content:flex-end}
+.tier-badge{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;overflow:hidden;border:2px solid #30363d;background:#1c2128}
+.tier-badge img{width:100%;height:100%;object-fit:cover}
+.tier-badge .label{position:absolute;bottom:-1px;font-size:7.5px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9);background:rgba(0,0,0,.65);border-radius:3px;padding:0 2px;line-height:1.4;font-family:'Inter',sans-serif}
+.tier-dash{width:34px;height:34px;border-radius:50%;background:#1c2128;border:2px solid #30363d;display:flex;align-items:center;justify-content:center;color:#8b949e;font-size:14px;flex-shrink:0}
+
+/* ========== POPUP ========== */
+.popup-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+}
+.popup-overlay.show{display:flex}
+.popup-card{
+  background:#13151a;
+  border:1px solid #2d333b;
+  border-radius:20px;
+  width:400px;
+  max-width:95vw;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 32px 80px rgba(0,0,0,0.7);
+}
+.popup-top-bg{
+  width:100%;
+  height:100px;
+  background:linear-gradient(135deg,#1a1f2e,#0d1117);
+  position:relative;
+}
+.popup-close-btn{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.15);
+  color:#ccc;
+  font-size:15px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:10;
+  transition:background .2s;
+}
+.popup-close-btn:hover{background:rgba(255,255,255,0.2);color:#fff}
+.popup-avatar-section{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  margin-top:-50px;
+  padding:0 24px 0;
+  position:relative;
+  z-index:2;
+}
+.popup-avatar-circle{
+  width:96px;
+  height:96px;
+  border-radius:50%;
+  border:3px solid #2d333b;
+  overflow:hidden;
+  background:#1c2128;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+}
+.popup-avatar-circle img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.popup-content{
+  padding:12px 24px 28px;
+}
+.popup-player-name{
+  font-family:'Rajdhani',sans-serif;
+  font-size:26px;
+  font-weight:700;
+  color:#ffffff;
+  text-align:center;
+  margin:10px 0 6px;
+  letter-spacing:0.5px;
+}
+.popup-combat-badge{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:10px;
+}
+.popup-combat-inner{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(251,191,36,0.12);
+  border:1px solid rgba(251,191,36,0.3);
+  border-radius:20px;
+  padding:5px 16px;
+  font-size:13px;
+  font-weight:600;
+  color:#fbbf24;
+}
+.popup-region-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-size:13px;
+  color:#8b949e;
+  margin-bottom:10px;
+}
+.popup-namemc-link{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:4px;
+}
+.popup-namemc-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:#1c2128;
+  border:1px solid #30363d;
+  border-radius:8px;
+  padding:5px 14px;
+  font-size:12px;
+  color:#8b949e;
+  text-decoration:none;
+  transition:border-color .2s,color .2s;
+  cursor:pointer;
+}
+.popup-namemc-btn:hover{border-color:#58a6ff;color:#58a6ff}
+.popup-divider{
+  height:1px;
+  background:#21262d;
+  margin:16px 0;
+}
+.popup-section-label{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:2px;
+  color:#8b949e;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.popup-position-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:#1c2128;
+  border:1px solid #2d333b;
+  border-radius:12px;
+  padding:12px 16px;
+}
+.popup-pos-rankbox{
+  width:42px;
+  height:42px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Rajdhani',sans-serif;
+  font-size:18px;
+  font-weight:700;
+  flex-shrink:0;
+}
+.popup-pos-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:1;
+}
+.popup-pos-trophy{font-size:20px}
+.popup-pos-text{
+  font-size:15px;
+  font-weight:700;
+  color:#e6edf3;
+  letter-spacing:0.5px;
+}
+.popup-pos-points{
+  font-size:13px;
+  color:#8b949e;
+  margin-left:2px;
+}
+.popup-tiers-wrap{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.popup-tier-item{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  position:relative;
+  overflow:hidden;
+  border:2px solid #30363d;
+  background:#1c2128;
+  flex-shrink:0;
+  transition:transform .15s,border-color .15s;
+}
+.popup-tier-item:hover{transform:scale(1.1);border-color:#58a6ff}
+.popup-tier-item img{width:100%;height:100%;object-fit:cover;display:block}
+.popup-tier-item .tlabel{
+  position:absolute;
+  bottom:-1px;
+  left:0;
+  right:0;
+  text-align:center;
+  font-size:7.5px;
+  font-weight:700;
+  color:#fff;
+  text-shadow:0 1px 2px rgba(0,0,0,1);
+  background:rgba(0,0,0,0.7);
+  padding:0 2px;
+  line-height:1.5;
+}
+</style>
+<script src="players.js"></script>
+<style>
+/* ===== ADMIN PANEL ===== */
+.admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:9000;align-items:center;justify-content:center}
+.admin-overlay.show{display:flex}
+.admin-modal{background:#13151a;border:1px solid #2d333b;border-radius:18px;width:560px;max-width:96vw;max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,0.8)}
+.am-header{padding:22px 24px 0;display:flex;align-items:center;justify-content:space-between}
+.am-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#e6edf3;display:flex;align-items:center;gap:10px}
+.am-badge{background:#f97316;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px}
+.am-close{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:50%;width:32px;height:32px;color:#aaa;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.am-close:hover{background:rgba(255,255,255,0.15);color:#fff}
+.am-body{padding:20px 24px 28px}
+/* Login */
+.am-login-label{font-size:11px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:.7px;display:block;margin-bottom:6px}
+.am-pwd-row{display:flex;gap:8px}
+.am-pwd-input{flex:1;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:9px 12px;color:#e6edf3;font-size:13px;outline:none;transition:border-color .2s;font-family:'Inter',sans-serif}
+.am-pwd-input:focus{border-color:#f97316}
+.am-pwd-btn{background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:8px;padding:9px 18px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .2s}
+.am-pwd-btn:hover{opacity:.85}
+.am-err{color:#f87171;font-size:12px;margin-top:8px;display:none}
+/* Logged in */
+.am-logged{display:none}
+.am-section-title{font-size:11px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.am-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.am-fg{display:flex;flex-direction:column;gap:5px}
+.am-fg label{font-size:11px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:.6px}
+.am-input{background:#0d1117;border:1px solid #30363d;border-radius:7px;padding:8px 11px;color:#e6edf3;font-size:13px;outline:none;transition:border-color .2s;font-family:'Inter',sans-serif;width:100%}
+.am-input:focus{border-color:#f97316}
+.am-select{background:#0d1117;border:1px solid #30363d;border-radius:7px;padding:8px 11px;color:#e6edf3;font-size:13px;outline:none;font-family:'Inter',sans-serif;width:100%}
+.am-tiers-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px}
+.am-tc{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:7px 5px;cursor:pointer;text-align:center;transition:all .2s;user-select:none}
+.am-tc.sel{background:rgba(249,115,22,0.12);border-color:#f97316}
+.am-tc-icon{width:26px;height:26px;margin:0 auto 3px}
+.am-tc-icon img{width:100%;height:100%}
+.am-tc-name{font-size:10px;font-weight:600;color:#8b949e;text-transform:uppercase;margin-bottom:3px}
+.am-tc.sel .am-tc-name{color:#f97316}
+.am-tc select{width:100%;padding:3px 4px;font-size:10px;background:#161b22;border:1px solid #30363d;border-radius:4px;color:#e6edf3;display:none;font-family:'Inter',sans-serif}
+.am-tc.sel select{display:block}
+.am-add-btn{width:100%;background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:8px;padding:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.3px;margin-bottom:10px;transition:opacity .2s}
+.am-add-btn:hover{opacity:.85}
+.am-success{display:none;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);border-radius:7px;padding:9px 13px;color:#4ade80;font-size:13px;font-weight:600;margin-bottom:10px}
+.am-divider{height:1px;background:#21262d;margin:14px 0}
+.am-player-list{max-height:220px;overflow-y:auto}
+.am-pi{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid #161b22}
+.am-pi:last-child{border-bottom:none}
+.am-pi-av{width:30px;height:30px;border-radius:4px;background:#21262d;overflow:hidden;flex-shrink:0}
+.am-pi-av img{width:100%;height:100%;object-fit:cover}
+.am-pi-name{flex:1;font-size:13px;font-weight:600;color:#e6edf3}
+.am-pi-pts{font-size:11px;color:#8b949e}
+.am-pi-del{background:transparent;border:1px solid #30363d;border-radius:5px;padding:3px 8px;color:#8b949e;font-size:11px;cursor:pointer;transition:all .2s;margin-left:auto}
+.am-pi-del:hover{border-color:#f87171;color:#f87171}
+.am-logout{background:transparent;border:1px solid #30363d;border-radius:6px;padding:5px 12px;color:#8b949e;font-size:11px;cursor:pointer;transition:all .2s}
+/* EDIT MODAL */
+.am-edit-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:10000;align-items:center;justify-content:center}
+.am-edit-overlay.show{display:flex}
+.am-edit-modal{background:#13151a;border:1px solid #2d333b;border-radius:14px;width:520px;max-width:96vw;max-height:90vh;overflow-y:auto;padding:22px 24px 28px;box-shadow:0 32px 80px rgba(0,0,0,0.9)}
+.am-edit-title{font-size:16px;font-weight:700;color:#e6edf3;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+.am-edit-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:50%;width:30px;height:30px;color:#aaa;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
+.am-edit-close:hover{background:rgba(255,255,255,.15);color:#fff}
+.am-edit-btn{background:#1c2128;border:1px solid #30363d;border-radius:5px;padding:3px 8px;color:#58a6ff;font-size:11px;cursor:pointer;transition:all .2s;margin-left:4px}
+.am-edit-btn:hover{border-color:#58a6ff;background:rgba(88,166,255,0.08)}
+.am-save-btn{width:100%;background:linear-gradient(135deg,#238636,#1a6b2a);border:none;border-radius:8px;padding:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;transition:opacity .2s}
+.am-save-btn:hover{opacity:.85}
+
+.am-logout:hover{border-color:#f87171;color:#f87171}
+/* Nav button */
+.admin-nav-btn{background:#1c2128;border:1px solid #30363d;border-radius:6px;padding:5px 12px;color:#f97316;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:5px}
+.admin-nav-btn:hover{background:#21262d;border-color:#f97316}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><span class="mc">UZ</span><span class="t">T</span><span class="ie">IE</span><span class="rs">RS</span></div>
+  <a href="index.html">🏠 Home</a>
+  <a href="vanilla.html">🏆 Ranklar</a>
+  <a href="">💬 Discords yoq ▾</a>
+  <a href="https://t.me/UzTierTest">📄 API Docs</a>
+  <div class="search">🔍 <input id="search-input" placeholder="Search player..." oninput="searchPlayers(this.value)" autocomplete="off" value=""></div>
+  <button class="admin-nav-btn" onclick="openAdmin()">⚙️ Admin Panel</button>
+</nav>
+<div class="tabs-bar">
+  <a class="tab active" href="#"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/overall.svg" width="24" height="24"></span>Overall</a>
+  <a class="tab" href="#"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/2v2.svg" width="24" height="24"></span>LTMs</a>
+  <a class="tab" href="vanilla.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/vanilla.svg" width="24" height="24"></span>Vanilla</a>
+  <a class="tab" href="uhc.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/uhc.svg" width="24" height="24"></span>UHC</a>
+  <a class="tab" href="pot.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/pot.svg" width="24" height="24"></span>Pot</a>
+  <a class="tab" href="nethpot.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/nethop.svg" width="24" height="24"></span>NethOP</a>
+  <a class="tab" href="smp.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/smp.svg" width="24" height="24"></span>SMP</a>
+  <a class="tab" href="sword.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/sword.svg" width="24" height="24"></span>Sword</a>
+  <a class="tab" href="axe.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/axe.svg" width="24" height="24"></span>Axe</a>
+  <a class="tab" href="mace.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/mace.svg" width="24" height="24"></span>Mace</a>
+</div>
+<div class="container">
+  <div class="topbar">
+    <div class="server-badge"><span class="pvp-badge">PVP</span><div><div style="font-size:9px;color:#8b949e">SERVER IP</div><strong>none</strong></div>💬</div>
+  </div>
+  <table>
+    <thead><tr><th style="width:52px">#</th><th>O'yinchi</th><th style="width:80px">REGION</th><th style="text-align:right">TIERS</th></tr></thead>
+    <tbody id="player-tbody"></tbody>
+  </table>
+</div>
+
+<!-- ===== POPUP ===== -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup-card">
+    <div class="popup-top-bg">
+      <button class="popup-close-btn" id="popup-close">✕</button>
+    </div>
+    <div class="popup-avatar-section">
+      <div class="popup-avatar-circle">
+        <img id="popup-avatar" src="#" alt="">
+      </div>
+    </div>
+    <div class="popup-content">
+      <div class="popup-player-name" id="popup-name"></div>
+      <div class="popup-combat-badge">
+        <div class="popup-combat-inner">
+          <span>◆</span>
+          <span id="popup-rank-text"></span>
+        </div>
+      </div>
+      <div class="popup-region-row">
+        <span id="popup-region-icon"></span>
+        <span id="popup-region-text"></span>
+      </div>
+      <div class="popup-namemc-link">
+        <a class="popup-namemc-btn" id="popup-namemc-link" href="#" target="_blank">
+          <span>🔗</span>
+          <span id="popup-namemc-text">NameMC</span>
+          <span style="opacity:0.5;font-size:10px">↗</span>
+        </a>
+      </div>
+      <div class="popup-divider"></div>
+      <div class="popup-section-label">POSITION</div>
+      <div class="popup-position-card">
+        <div class="popup-pos-rankbox" id="popup-pos-rankbox"></div>
+        <div class="popup-pos-right">
+          <span class="popup-pos-trophy">🏆</span>
+          <span class="popup-pos-text">OVERALL</span>
+          <span class="popup-pos-points" id="popup-points"></span>
+        </div>
+      </div>
+      <div class="popup-divider"></div>
+      <div class="popup-section-label">TIERS</div>
+      <div class="popup-tiers-wrap" id="popup-tiers-wrap"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+//oyinchi qoshiladi
+// Players — players.js + admin qo'shganlar birlashtiriladi
+const BASE_PLAYERS = window.UZTIERS_PLAYERS || [];
+function getAdminPlayers() {
+  try { return JSON.parse(localStorage.getItem('uztiersAdminPlayers') || '[]'); } catch(e) { return []; }
+}
+function getAllPlayers() {
+  const base = [...BASE_PLAYERS];
+  const admins = getAdminPlayers();
+  const baseNames = base.map(p => p.name.trim().toLowerCase());
+  admins.forEach(ap => {
+    if (!baseNames.includes(ap.name.trim().toLowerCase())) {
+      base.push({ name: ap.name, points: ap.points||0, rank: ap.rank||'Combat Cadet', avatar: ap.avatar, region: ap.region||'AS', tiers: ap.tiers||[] });
+    }
+  });
+  return base;
+}
+const players = getAllPlayers();
+// ============================================================
+
+// Sorted players (points bo'yicha)
+let sortedPlayers = [];
+
+function buildRow(p, rank, rankClass) {
+  const tiersHTML = p.tiers.map(t =>
+    `<div class="tier-badge"><img src="https://mctiers.com/tier_icons/${t.icon}.svg" alt=""><span class="label">${t.label}</span></div>`
+  ).join('');
+  return `
+    <tr onclick="showPopup(${rank - 1})">
+      <td><div class="rank-box ${rankClass}">${rank}.</div></td>
+      <td><div class="player-cell">
+        <div class="avatar"><img src="${p.avatar}" alt="${p.name}"></div>
+        <div>
+          <span class="player-name">${p.name}</span>
+          <div class="player-rank"><span class="diamond-ico">◆</span> ${p.rank} (${p.points} points)</div>
+        </div>
+      </div></td>
+      <td><span class="region-badge na">${p.region}</span></td>
+      <td class="tiers-cell">${tiersHTML}</td>
+    </tr>`;
+}
+
+function renderPlayers() {
+  sortedPlayers = [...players].sort((a, b) => b.points - a.points);
+  const tbody = document.getElementById('player-tbody');
+  tbody.innerHTML = sortedPlayers.map((p, i) => {
+    const rank = i + 1;
+    const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+    return buildRow(p, rank, rankClass);
+  }).join('');
+}
+
+function searchPlayers(q) {
+  q = q.toLowerCase().trim();
+  const base = [...players].sort((a, b) => b.points - a.points);
+  const filtered = q ? base.filter(p => p.name.toLowerCase().includes(q)) : base;
+  const tbody = document.getElementById('player-tbody');
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px;color:#8b949e">O\'yinchi topilmadi</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(p => {
+    const rank = base.indexOf(p) + 1;
+    const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+    const tiersHTML = p.tiers.map(t =>
+      `<div class="tier-badge"><img src="https://mctiers.com/tier_icons/${t.icon}.svg" alt=""><span class="label">${t.label}</span></div>`
+    ).join('');
+    return `
+      <tr onclick="showPopupByPlayer(${JSON.stringify(p).split('"').join('&quot;')}, ${rank}, '${rankClass}')">
+        <td><div class="rank-box ${rankClass}">${rank}.</div></td>
+        <td><div class="player-cell">
+          <div class="avatar"><img src="${p.avatar}" alt="${p.name}"></div>
+          <div>
+            <span class="player-name">${p.name}</span>
+            <div class="player-rank"><span class="diamond-ico">◆</span> ${p.rank} (${p.points} points)</div>
+          </div>
+        </div></td>
+        <td><span class="region-badge na">${p.region}</span></td>
+        <td class="tiers-cell">${tiersHTML}</td>
+      </tr>`;
+  }).join('');
+}
+
+// Popup ochish (normal rejim - index bo'yicha)
+function showPopup(sortedIndex) {
+  const p = sortedPlayers[sortedIndex];
+  const rank = sortedIndex + 1;
+  const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+  fillPopup(p, rank, rankClass);
+}
+
+// Popup ochish (search rejimi - to'g'ridan to'g'ri player ob'ekti)
+function showPopupByPlayer(pAttr, rank, rankClass) {
+  fillPopup(pAttr, rank, rankClass);
+}
+
+function fillPopup(p, rank, rankClass) {
+  // Avatar
+  document.getElementById('popup-avatar').src = p.avatar;
+
+  // Ism
+  document.getElementById('popup-name').textContent = p.name;
+
+  // Rank
+  document.getElementById('popup-rank-text').textContent = p.rank;
+
+  // Region
+  const regionMap = {
+    AS: { icon: '🌏', name: 'Asia' },
+    EU: { icon: '🌍', name: 'Europe' },
+    NA: { icon: '🌎', name: 'North America' },
+    SA: { icon: '🌎', name: 'South America' },
+    OC: { icon: '🌏', name: 'Oceania' }
+  };
+  const reg = regionMap[p.region] || { icon: '🌐', name: p.region };
+  document.getElementById('popup-region-icon').textContent = reg.icon;
+  document.getElementById('popup-region-text').textContent = reg.name;
+
+  // NameMC
+  document.getElementById('popup-namemc-link').href = 'https://namemc.com/profile/' + p.name;
+  document.getElementById('popup-namemc-text').textContent = p.name;
+
+  // Position rank box
+  const rb = document.getElementById('popup-pos-rankbox');
+  rb.textContent = rank + '.';
+  if (rankClass === 'rank-1') {
+    rb.style.background = 'linear-gradient(135deg,#b8860b,#ffd700)';
+    rb.style.color = '#1a1200';
+    rb.style.border = 'none';
+  } else if (rankClass === 'rank-2') {
+    rb.style.background = 'linear-gradient(135deg,#555,#aaa)';
+    rb.style.color = '#fff';
+    rb.style.border = 'none';
+  } else if (rankClass === 'rank-3') {
+    rb.style.background = 'linear-gradient(135deg,#7b4000,#cd7f32)';
+    rb.style.color = '#fff';
+    rb.style.border = 'none';
+  } else {
+    rb.style.background = '#1c2128';
+    rb.style.color = '#e6edf3';
+    rb.style.border = '1px solid #30363d';
+  }
+
+  // Points
+  document.getElementById('popup-points').textContent = '(' + p.points + ' points)';
+
+  // Tiers
+  document.getElementById('popup-tiers-wrap').innerHTML = p.tiers
+    .filter(t => t.icon && t.label)
+    .map(t => `
+      <div class="popup-tier-item">
+        <img src="https://mctiers.com/tier_icons/${t.icon}.svg" alt="${t.icon}">
+        <span class="tlabel">${t.label}</span>
+      </div>`)
+    .join('');
+
+  // Ochish
+  document.getElementById('popup-overlay').classList.add('show');
+}
+
+// Popup yopish
+document.getElementById('popup-close').addEventListener('click', function () {
+  document.getElementById('popup-overlay').classList.remove('show');
+});
+document.getElementById('popup-overlay').addEventListener('click', function (e) {
+  if (e.target === this) this.classList.remove('show');
+});
+
+// Ishga tushirish
+renderPlayers();
+
+// ========== ADMIN PANEL JS ==========
+const AM_PASS = "inaxuydalbayop";
+const API_URL = "https://uztiers-server.onrender.com/api/players";
+
+let amLoggedIn = false;
+let amSelectedTiers = {};
+let amEditSelectedTiers = {};
+const AM_CATS = ['mace','sword','vanilla','uhc','nethop','pot','axe','smp'];
+
+// ===== Server + players.js ni birlashtirib ko'rsatish =====
+async function refreshFromServer() {
+  try {
+    const r = await fetch(API_URL + '?t=' + Date.now());
+    if (!r.ok) throw new Error('server error');
+    const serverPlayers = await r.json();
+    if (!Array.isArray(serverPlayers)) return;
+    const base = [...(window.UZTIERS_PLAYERS || [])];
+    const baseNames = base.map(p => p.name.trim().toLowerCase());
+    serverPlayers.forEach(sp => {
+      if (!baseNames.includes(sp.name.trim().toLowerCase())) base.push(sp);
+    });
+    players.length = 0;
+    base.forEach(p => players.push(p));
+    renderPlayers();
+  } catch(e) {
+    console.log('Server offline, lokal players.js ishlatilmoqda');
+  }
+}
+refreshFromServer();
+
+// ===== Admin panel ochish/yopish =====
+function openAdmin() {
+  document.getElementById('admin-overlay').classList.add('show');
+  if (amLoggedIn) amRenderList();
+}
+function closeAdmin() {
+  document.getElementById('admin-overlay').classList.remove('show');
+}
+document.getElementById('admin-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeAdmin();
+});
+
+// ===== Login =====
+function amLogin() {
+  const val = document.getElementById('am-pwd').value;
+  if (val === AM_PASS) {
+    amLoggedIn = true;
+    document.getElementById('am-login-section').style.display = 'none';
+    document.getElementById('am-logged-section').style.display = 'block';
+    amRenderList();
+  } else {
+    const err = document.getElementById('am-err');
+    err.style.display = 'block';
+    setTimeout(() => err.style.display = 'none', 2000);
+    document.getElementById('am-pwd').style.borderColor = '#f87171';
+    setTimeout(() => document.getElementById('am-pwd').style.borderColor = '#30363d', 1500);
+  }
+}
+document.getElementById('am-pwd').addEventListener('keydown', e => { if(e.key==='Enter') amLogin(); });
+
+function amLogout() {
+  amLoggedIn = false;
+  document.getElementById('am-login-section').style.display = 'block';
+  document.getElementById('am-logged-section').style.display = 'none';
+  document.getElementById('am-pwd').value = '';
+}
+
+// ===== Tier toggle (qo'shish formasi) =====
+function amToggleTier(cat, el) {
+  if (el.classList.contains('sel')) {
+    el.classList.remove('sel');
+    delete amSelectedTiers[cat];
+  } else {
+    el.classList.add('sel');
+    amSelectedTiers[cat] = document.getElementById('amts-' + cat).value;
+  }
+}
+AM_CATS.forEach(cat => {
+  const s = document.getElementById('amts-' + cat);
+  if (s) s.addEventListener('change', function(e) {
+    e.stopPropagation();
+    if (amSelectedTiers[cat] !== undefined) amSelectedTiers[cat] = this.value;
+  });
+});
+
+// ===== O'yinchi qo'shish =====
+async function amAddPlayer() {
+  const name = document.getElementById('am-name').value.trim();
+  const avatar = document.getElementById('am-avatar').value.trim();
+  const region = document.getElementById('am-region').value;
+  const rank = document.getElementById('am-rank').value;
+  const points = parseInt(document.getElementById('am-points').value) || 0;
+  if (!name) { alert('Nick kiriting!'); return; }
+  if (!avatar) { alert('Avatar URL kiriting!'); return; }
+
+  const tiers = [];
+  AM_CATS.forEach(cat => {
+    const el = document.getElementById('amt-' + cat);
+    if (el && el.classList.contains('sel'))
+      tiers.push({ icon: cat, label: document.getElementById('amts-' + cat).value });
+  });
+  if (!tiers.length) { alert("Kamida bitta buml tanlang!"); return; }
+
+  const btn = document.querySelector('.am-add-btn');
+  btn.textContent = '⏳ Saqlanmoqda...';
+  btn.disabled = true;
+
+  try {
+    const r = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: AM_PASS, name, avatar, region, rank, points, tiers })
+    });
+    const result = await r.json();
+    if (result.success) {
+      await refreshFromServer();
+      document.getElementById('am-name').value = '';
+      document.getElementById('am-avatar').value = '';
+      document.getElementById('am-points').value = '';
+      AM_CATS.forEach(cat => {
+        const el = document.getElementById('amt-' + cat);
+        if (el) el.classList.remove('sel');
+      });
+      amSelectedTiers = {};
+      const s = document.getElementById('am-success');
+      s.style.display = 'block';
+      setTimeout(() => s.style.display = 'none', 3000);
+      amRenderList();
+    } else {
+      alert('Xatolik: ' + (result.error || 'Nomalum xato'));
+    }
+  } catch(e) {
+    alert('Server bilan aloqa yoq: ' + e.message);
+  }
+  btn.textContent = "✅ O'yinchini Qo'shish";
+  btn.disabled = false;
+}
+
+// ===== O'yinchilar ro'yxati (players.js + server) =====
+async function amRenderList() {
+  const wrap = document.getElementById('am-player-list');
+  wrap.innerHTML = '<div style="color:#8b949e;font-size:13px;padding:10px 0">⏳ Yuklanmoqda...</div>';
+
+  // players.js + server birlashtirilgan list
+  let serverPlayers = [];
+  try {
+    const r = await fetch(API_URL + '?t=' + Date.now());
+    if (r.ok) serverPlayers = await r.json();
+  } catch(e) {}
+
+  const basePlayers = (window.UZTIERS_PLAYERS || []).map(p => ({ ...p, _source: 'static' }));
+  const serverNames = serverPlayers.map(p => p.name.trim().toLowerCase());
+  const combined = [
+    ...serverPlayers.map(p => ({ ...p, _source: 'server' })),
+    ...basePlayers.filter(p => !serverNames.includes(p.name.trim().toLowerCase()))
+  ].sort((a, b) => (b.points || 0) - (a.points || 0));
+
+  document.getElementById('am-count').textContent = combined.length + " o'yinchi";
+
+  if (!combined.length) {
+    wrap.innerHTML = '<div style="color:#8b949e;font-size:13px;padding:10px 0">Hali qo\'shilmagan</div>';
+    return;
+  }
+
+  wrap.innerHTML = combined.map(p => {
+    const isServer = p._source === 'server';
+    const editBtn = isServer
+      ? `<button class="am-edit-btn" onclick="amOpenEdit(${p.id})">✏️</button>`
+      : `<button class="am-edit-btn" style="opacity:0.4;cursor:not-allowed" title="Faqat players.js dan o'zgartiriladi">✏️</button>`;
+    const delBtn = isServer
+      ? `<button class="am-pi-del" onclick="amDelete(${p.id})">🗑</button>`
+      : `<span style="font-size:10px;color:#30363d;padding:0 4px">static</span>`;
+    return `
+      <div class="am-pi">
+        <div class="am-pi-av"><img src="${p.avatar}" onerror="this.style.display='none'"></div>
+        <div class="am-pi-name">${p.name}</div>
+        <div class="am-pi-pts">${p.points || 0} pts</div>
+        ${editBtn}
+        ${delBtn}
+      </div>`;
+  }).join('');
+}
+
+// ===== O'chirish =====
+async function amDelete(id) {
+  if (!confirm("O'chirasizmi?")) return;
+  try {
+    const r = await fetch(API_URL + '/' + id, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: AM_PASS })
+    });
+    const result = await r.json();
+    if (result.success) { await refreshFromServer(); amRenderList(); }
+    else alert('Xatolik: ' + result.error);
+  } catch(e) { alert('Xatolik: ' + e.message); }
+}
+
+// ===== TAHRIRLASH MODALI =====
+function amEditToggleTier(cat, el) {
+  if (el.classList.contains('sel')) {
+    el.classList.remove('sel');
+    delete amEditSelectedTiers[cat];
+  } else {
+    el.classList.add('sel');
+    amEditSelectedTiers[cat] = document.getElementById('amtes-' + cat).value;
+  }
+}
+AM_CATS.forEach(cat => {
+  const s = document.getElementById('amtes-' + cat);
+  if (s) s.addEventListener('change', function(e) {
+    e.stopPropagation();
+    if (amEditSelectedTiers[cat] !== undefined) amEditSelectedTiers[cat] = this.value;
+  });
+});
+
+async function amOpenEdit(id) {
+  // Serverdan o'yinchini olish
+  let player = null;
+  try {
+    const r = await fetch(API_URL + '?t=' + Date.now());
+    const data = await r.json();
+    player = data.find(p => p.id === id);
+  } catch(e) {}
+  if (!player) { alert("O'yinchi topilmadi"); return; }
+
+  document.getElementById('am-edit-id').value = id;
+  document.getElementById('am-edit-name').value = player.name;
+  document.getElementById('am-edit-avatar').value = player.avatar;
+  document.getElementById('am-edit-region').value = player.region || 'AS';
+  document.getElementById('am-edit-rank').value = player.rank || 'Combat Cadet';
+  document.getElementById('am-edit-points').value = player.points || 0;
+
+  // Tier selectlarni reset
+  amEditSelectedTiers = {};
+  AM_CATS.forEach(cat => {
+    const el = document.getElementById('amte-' + cat);
+    if (el) el.classList.remove('sel');
+  });
+
+  // Mavjud tierlarni belgilash
+  (player.tiers || []).forEach(t => {
+    const el = document.getElementById('amte-' + t.icon);
+    const sel = document.getElementById('amtes-' + t.icon);
+    if (el && sel) {
+      el.classList.add('sel');
+      sel.value = t.label;
+      amEditSelectedTiers[t.icon] = t.label;
+    }
+  });
+
+  document.getElementById('am-edit-overlay').classList.add('show');
+}
+
+function amCloseEdit() {
+  document.getElementById('am-edit-overlay').classList.remove('show');
+}
+document.getElementById('am-edit-overlay').addEventListener('click', function(e) {
+  if (e.target === this) amCloseEdit();
+});
+
+async function amSaveEdit() {
+  const id = parseInt(document.getElementById('am-edit-id').value);
+  const name = document.getElementById('am-edit-name').value.trim();
+  const avatar = document.getElementById('am-edit-avatar').value.trim();
+  const region = document.getElementById('am-edit-region').value;
+  const rank = document.getElementById('am-edit-rank').value;
+  const points = parseInt(document.getElementById('am-edit-points').value) || 0;
+
+  if (!name) { alert('Nick kiriting!'); return; }
+  if (!avatar) { alert('Avatar URL kiriting!'); return; }
+
+  const tiers = [];
+  AM_CATS.forEach(cat => {
+    const el = document.getElementById('amte-' + cat);
+    if (el && el.classList.contains('sel'))
+      tiers.push({ icon: cat, label: document.getElementById('amtes-' + cat).value });
+  });
+  if (!tiers.length) { alert("Kamida bitta buml tanlang!"); return; }
+
+  const btn = document.querySelector('.am-save-btn');
+  btn.textContent = '⏳ Saqlanmoqda...';
+  btn.disabled = true;
+
+  try {
+    const r = await fetch(API_URL + '/' + id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: AM_PASS, name, avatar, region, rank, points, tiers })
+    });
+    const result = await r.json();
+    if (result.success) {
+      amCloseEdit();
+      await refreshFromServer();
+      amRenderList();
+    } else {
+      alert('Xatolik: ' + (result.error || 'Nomalum xato'));
+    }
+  } catch(e) {
+    alert('Server bilan aloqa yoq: ' + e.message);
+  }
+  btn.textContent = '💾 Saqlash';
+  btn.disabled = false;
+}
+// ========== END ADMIN PANEL JS ==========
+// Clear search input on load
+document.addEventListener('DOMContentLoaded', function() {
+  const si = document.getElementById('search-input');
+  if (si) { si.value = ''; }
+});
+
+
+</script>
+
+<footer style="text-align:center;padding:20px;font-size:12px;color:#8b949e">
+  © 2026 UZ TIERS. Created by <a href="https://t.me/UzTierTest" style="color:#58a6ff;text-decoration:none">Team On Point</a>.
+</footer>
+
+
+<!-- ===== ADMIN PANEL MODAL ===== -->
+<div class="admin-overlay" id="admin-overlay">
+  <div class="admin-modal">
+    <div class="am-header">
+      <div class="am-title">⚙️ Admin Panel <span class="am-badge">ADMIN</span></div>
+      <button class="am-close" onclick="closeAdmin()">✕</button>
+    </div>
+    <div class="am-body">
+
+      <!-- LOGIN -->
+      <div id="am-login-section">
+        <div style="margin-bottom:14px;color:#8b949e;font-size:13px">Admin parolini kiriting:</div>
+        <span class="am-login-label">Parol</span>
+        <div class="am-pwd-row">
+          <input class="am-pwd-input" type="password" id="am-pwd" placeholder="Parolni kiriting..." onkeydown="if(event.key==='Enter')amLogin()">
+          <button class="am-pwd-btn" onclick="amLogin()">🔐 Kirish</button>
+        </div>
+        <div class="am-err" id="am-err">❌ Noto'g'ri parol!</div>
+      </div>
+
+      <!-- LOGGED IN -->
+      <div class="am-logged" id="am-logged-section">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div class="am-section-title" style="margin:0">🎮 Yangi O'yinchi Qo'shish</div>
+          <button class="am-logout" onclick="amLogout()">🚪 Chiqish</button>
+        </div>
+
+        <div class="am-form-grid">
+          <div class="am-fg">
+            <label>Nick</label>
+            <input class="am-input" id="am-name" placeholder="masalan: UmarBlade" oninput="amPreviewAvatar()">
+          </div>
+          <div class="am-fg">
+            <label>Avatar URL</label>
+            <input class="am-input" id="am-avatar" placeholder="https://... yoki fayl.png" oninput="amPreviewAvatar()">
+          </div>
+          <div class="am-fg">
+            <label>Region</label>
+            <select class="am-select" id="am-region">
+              <option value="AS">🌏 AS</option>
+              <option value="EU">🌍 EU</option>
+              <option value="NA">🌎 NA</option>
+            </select>
+          </div>
+          <div class="am-fg">
+            <label>Rank</label>
+            <select class="am-select" id="am-rank">
+              <option>Combat Grandmaster</option>
+              <option>Combat Ustasi</option>
+              <option>Combat Ace</option>
+              <option>Combat Specialist</option>
+              <option>Combat Cadet</option>
+            </select>
+          </div>
+          <div class="am-fg">
+            <label>Overall Points</label>
+            <input class="am-input" id="am-points" type="number" placeholder="150" min="0">
+          </div>
+        </div>
+
+        <div class="am-section-title">Buml va Tier (bir nechta tanlang)</div>
+        <div class="am-tiers-grid">
+          <div class="am-tc" id="amt-mace" onclick="amToggleTier('mace',this)">
+            <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/mace.svg"></div>
+            <div class="am-tc-name">Mace</div>
+            <select id="amts-mace" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+          </div>
+          <div class="am-tc" id="amt-sword" onclick="amToggleTier('sword',this)">
+            <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/sword.svg"></div>
+            <div class="am-tc-name">Sword</div>
+            <select id="amts-sword" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+          </div>
+          <div class="am-tc" id="amt-vanilla" onclick="amToggleTier('vanilla',this)">
+            <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/vanilla.svg"></div>
+            <div class="am-tc-name">Vanilla</div>
+            <select id="amts-vanilla" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+          </div>
+          <div class="am-tc" id="amt-uhc" onclick="amToggleTier('uhc',this)">
+            <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/uhc.svg"></div>
+            <div class="am-tc-name">UHC</div>
+            <select id="amts-uhc" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+          </div>
+          <div class="am-tc" id="amt-nethop" onclick="amToggleTier('nethop',this)">
+            <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/nethop.svg"></div>
+            <div class="am-tc-name">NethOP</div>
+            <select id="amts-nethop" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+          </div>
+          <div class="am-tc" id="amt-pot" onclick="amToggleTier('pot',this)">
+            <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/pot.svg"></div>
+            <div class="am-tc-name">Pot</div>
+            <select id="amts-pot" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+          </div>
+          <div class="am-tc" id="amt-axe" onclick="amToggleTier('axe',this)">
+            <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/axe.svg"></div>
+            <div class="am-tc-name">Axe</div>
+            <select id="amts-axe" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+          </div>
+          <div class="am-tc" id="amt-smp" onclick="amToggleTier('smp',this)">
+            <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/smp.svg"></div>
+            <div class="am-tc-name">SMP</div>
+            <select id="amts-smp" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+          </div>
+        </div>
+
+        <div class="am-success" id="am-success">✅ O'yinchi muvaffaqiyatli qo'shildi!</div>
+        <button class="am-add-btn" onclick="amAddPlayer()">✅ O'yinchini Qo'shish</button>
+
+        <div class="am-divider"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div class="am-section-title" style="margin:0">📋 Qo'shilgan O'yinchilar</div>
+          <span style="font-size:11px;color:#8b949e" id="am-count"></span>
+        </div>
+        <div class="am-player-list" id="am-player-list"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== EDIT MODAL ===== -->
+<div class="am-edit-overlay" id="am-edit-overlay">
+  <div class="am-edit-modal">
+    <div class="am-edit-title">
+      ✏️ O'yinchini Tahrirlash
+      <button class="am-edit-close" onclick="amCloseEdit()">✕</button>
+    </div>
+    <input type="hidden" id="am-edit-id">
+    <div class="am-form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div class="am-fg">
+        <label style="font-size:11px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:.6px">Nick</label>
+        <input class="am-input" id="am-edit-name" placeholder="Nick">
+      </div>
+      <div class="am-fg">
+        <label style="font-size:11px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:.6px">Avatar URL</label>
+        <input class="am-input" id="am-edit-avatar" placeholder="https://...">
+      </div>
+      <div class="am-fg">
+        <label style="font-size:11px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:.6px">Region</label>
+        <select class="am-select" id="am-edit-region">
+          <option value="AS">🌏 AS</option>
+          <option value="EU">🌍 EU</option>
+          <option value="NA">🌎 NA</option>
+        </select>
+      </div>
+      <div class="am-fg">
+        <label style="font-size:11px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:.6px">Rank</label>
+        <select class="am-select" id="am-edit-rank">
+          <option>Combat Grandmaster</option>
+          <option>Combat Ustasi</option>
+          <option>Combat Ace</option>
+          <option>Combat Specialist</option>
+          <option>Combat Cadet</option>
+        </select>
+      </div>
+      <div class="am-fg">
+        <label style="font-size:11px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:.6px">Overall Points</label>
+        <input class="am-input" id="am-edit-points" type="number" placeholder="150" min="0">
+      </div>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Buml va Tier</div>
+    <div class="am-tiers-grid">
+      <div class="am-tc" id="amte-mace" onclick="amEditToggleTier('mace',this)">
+        <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/mace.svg"></div>
+        <div class="am-tc-name">Mace</div>
+        <select id="amtes-mace" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+      </div>
+      <div class="am-tc" id="amte-sword" onclick="amEditToggleTier('sword',this)">
+        <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/sword.svg"></div>
+        <div class="am-tc-name">Sword</div>
+        <select id="amtes-sword" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+      </div>
+      <div class="am-tc" id="amte-vanilla" onclick="amEditToggleTier('vanilla',this)">
+        <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/vanilla.svg"></div>
+        <div class="am-tc-name">Vanilla</div>
+        <select id="amtes-vanilla" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+      </div>
+      <div class="am-tc" id="amte-uhc" onclick="amEditToggleTier('uhc',this)">
+        <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/uhc.svg"></div>
+        <div class="am-tc-name">UHC</div>
+        <select id="amtes-uhc" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+      </div>
+      <div class="am-tc" id="amte-nethop" onclick="amEditToggleTier('nethop',this)">
+        <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/nethop.svg"></div>
+        <div class="am-tc-name">NethOP</div>
+        <select id="amtes-nethop" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+      </div>
+      <div class="am-tc" id="amte-pot" onclick="amEditToggleTier('pot',this)">
+        <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/pot.svg"></div>
+        <div class="am-tc-name">Pot</div>
+        <select id="amtes-pot" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+      </div>
+      <div class="am-tc" id="amte-axe" onclick="amEditToggleTier('axe',this)">
+        <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/axe.svg"></div>
+        <div class="am-tc-name">Axe</div>
+        <select id="amtes-axe" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+      </div>
+      <div class="am-tc" id="amte-smp" onclick="amEditToggleTier('smp',this)">
+        <div class="am-tc-icon"><img src="https://mctiers.com/tier_icons/smp.svg"></div>
+        <div class="am-tc-name">SMP</div>
+        <select id="amtes-smp" onclick="event.stopPropagation()"><option>HT1</option><option>HT2</option><option>HT3</option><option>HT4</option><option>HT5</option><option>LT1</option><option>LT2</option><option>LT3</option><option>LT4</option><option>LT5</option></select>
+      </div>
+    </div>
+    <button class="am-save-btn" onclick="amSaveEdit()">💾 Saqlash</button>
+  </div>
+</div>
+
+
+</body>
+</html>

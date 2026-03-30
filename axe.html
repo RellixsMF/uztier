@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>UzTiers — Axe</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{background:#0d1117;color:#c9d1d9;font-family:'Inter',sans-serif}
+nav{background:#161b22;border-bottom:1px solid #21262d;display:flex;align-items:center;padding:0 28px;height:54px;gap:28px}
+.logo{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;display:flex}
+.logo .mc{color:#4ade80}.logo .t{color:#f97316}.logo .ie{color:#facc15}.logo .rs{color:#4ade80}
+nav a{color:#8b949e;text-decoration:none;font-size:14px;display:flex;align-items:center;gap:5px}
+nav a:hover{color:#e6edf3}
+.search{margin-left:auto;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:5px 12px;color:#8b949e;font-size:13px;width:200px;display:flex;align-items:center;gap:8px}
+.tabs-bar{background:#161b22;border-bottom:1px solid #21262d;display:flex;padding:0 28px;overflow-x:auto}
+.tab{display:flex;flex-direction:column;align-items:center;padding:10px 16px;font-size:12px;color:#8b949e;cursor:pointer;border-bottom:2px solid transparent;gap:4px;min-width:68px;text-decoration:none;white-space:nowrap}
+.tab:hover{color:#c9d1d9}.tab.active{color:#e6edf3;border-bottom-color:#f97316}
+.tab-ico{font-size:18px}
+.container{max-width:1200px;margin:0 auto;padding:20px 28px}
+.topbar{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:20px}
+.info-btn{background:#1c2128;border:1px solid #30363d;border-radius:6px;padding:5px 10px;font-size:12px;color:#8b949e;display:flex;align-items:center;gap:5px;cursor:pointer}
+.server-badge{background:#1c2128;border:1px solid #30363d;border-radius:6px;padding:4px 10px;display:flex;align-items:center;gap:8px;font-size:11px;color:#8b949e}
+.server-badge strong{color:#e6edf3;font-size:11px}
+.pvp-badge{background:#d62828;color:#fff;font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px}
+.tiers-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid #21262d;border-radius:8px;overflow:hidden}
+.tier-col{border-right:1px solid #21262d}
+.tier-col:last-child{border-right:none}
+.tier-header{padding:12px 8px;text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;border-bottom:1px solid #21262d;display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;min-height:44px}
+.tier-header .trophy{font-size:14px;flex-shrink:0}
+.t1-header{background:linear-gradient(135deg,rgba(184,134,11,0.25),rgba(255,215,0,0.12));color:#ffd700}
+.t2-header{background:linear-gradient(135deg,rgba(85,85,85,0.2),rgba(170,170,170,0.1));color:#aaa}
+.t3-header{background:linear-gradient(135deg,rgba(123,64,0,0.25),rgba(205,127,50,0.12));color:#cd7f32}
+.t4-header{background:#161b22;color:#8b949e}
+.t5-header{background:#161b22;color:#6b7280}
+.player-row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #161b22;transition:all .2s ease;cursor:pointer;position:relative}
+.player-row:last-child{border-bottom:none}
+.player-row:hover{background:#1c2128;padding-top:12px;padding-bottom:12px}
+.player-row:hover .p-avatar{width:36px;height:36px}
+.player-row:hover .p-name{color:#fff}
+.p-avatar{width:28px;height:28px;border-radius:3px;background:#30363d;overflow:hidden;flex-shrink:0;transition:all .2s ease}
+.p-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.tier-tooltip{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 6px);background:#1c2128;border:1px solid #30363d;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:700;color:#e6edf3;white-space:nowrap;z-index:99;pointer-events:none}
+.p-arrow:hover .tier-tooltip,.p-arrow:focus .tier-tooltip{display:block}
+.p-arrow{color:#4a5568;font-size:11px;flex-shrink:0;position:relative;cursor:help}
+.p-arrow:hover{color:#e6edf3}
+.p-name{font-size:13px;color:#e6edf3;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p-arrow{color:#30363d;font-size:12px;flex-shrink:0}
+.p-row-ht{border-left:3px solid rgba(255,100,100,0.4)}
+.p-row-lt{border-left:3px solid rgba(100,180,255,0.4)}
+.empty-col{padding:16px 12px;text-align:center;color:#4b5563;font-size:12px}
+</style>
+<script src="players.js"></script>
+</head>
+<body>
+<nav>
+  <div class="logo"><span class="mc">UZ</span><span class="t">T</span><span class="ie">IE</span><span class="rs">RS</span></div>
+  <a href="index.html">🏠 Home</a>
+  <a href="#">🏆 Ranklar</a>
+  <a href="#">💬 Discords yoq ▾</a>
+  <a href="#">📄 API Docs</a>
+  <div class="search">🔍 Search player... /</div>
+</nav>
+<div class="tabs-bar">
+  <a class="tab" href="index.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/overall.svg" width="24" height="24"></span>Overall</a>
+  <a class="tab" href="#"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/2v2.svg" width="24" height="24"></span>LTMs</a>
+  <a class="tab" href="vanilla.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/vanilla.svg" width="24" height="24"></span>Vanilla</a>
+  <a class="tab" href="uhc.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/uhc.svg" width="24" height="24"></span>UHC</a>
+  <a class="tab" href="pot.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/pot.svg" width="24" height="24"></span>Pot</a>
+  <a class="tab" href="nethpot.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/nethop.svg" width="24" height="24"></span>NethOP</a>
+  <a class="tab" href="smp.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/smp.svg" width="24" height="24"></span>SMP</a>
+  <a class="tab" href="sword.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/sword.svg" width="24" height="24"></span>Sword</a>
+  <a class="tab active" href="axe.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/axe.svg" width="24" height="24"></span>Axe</a>
+  <a class="tab" href="mace.html"><span class="tab-ico"><img src="https://mctiers.com/tier_icons/mace.svg" width="24" height="24"></span>Mace</a>
+</div>
+<div class="container">
+  <div class="topbar">
+    <div class="info-btn">ℹ️ Information</div>
+    <div class="server-badge"><span class="pvp-badge">PVP</span><div><div style="font-size:9px;color:#8b949e">SERVER IP</div><strong>none</strong></div>💬</div>
+  </div>
+  <div class="tiers-grid" id="tiers-grid"></div>
+</div>
+
+<script>
+const API_URL = "https://uztiers-server.onrender.com/api/players";
+const MODE_ICON = "axe";
+
+const TIERS = ["T1","T2","T3","T4","T5"];
+const TIER_LABELS = { T1:"Tier 1", T2:"Tier 2", T3:"Tier 3", T4:"Tier 4", T5:"Tier 5" };
+const HEADER_CLASS = { T1:"t1-header", T2:"t2-header", T3:"t3-header", T4:"t4-header", T5:"t5-header" };
+const TROPHY = { T1:"🏆", T2:"🏆", T3:"🏆", T4:"", T5:"" };
+
+function getTierGroup(tier) {
+  const num = tier.replace(/[A-Z]/gi,'').trim();
+  return "T" + num;
+}
+
+function render(playersList) {
+  const grouped = { T1:[], T2:[], T3:[], T4:[], T5:[] };
+  playersList.forEach(p => {
+    const grp = getTierGroup(p.tier);
+    if(grouped[grp]) grouped[grp].push(p);
+  });
+
+  const grid = document.getElementById('tiers-grid');
+  grid.innerHTML = TIERS.map(t => {
+    const players = grouped[t];
+    const rowsHTML = players.length
+      ? players.map(p => {
+          const isHT = p.tier.startsWith('H');
+          return `<div class="player-row ${isHT ? 'p-row-ht' : 'p-row-lt'}">
+            <div class="p-avatar"><img src="${p.avatar}" alt="${p.name}" onerror="this.style.display='none'"></div>
+            <span class="p-name">${p.name}</span>
+            <span class="p-arrow" title="${p.tier}">▲</span>
+          </div>`;
+        }).join('')
+      : `<div class="empty-col">—</div>`;
+
+    return `<div class="tier-col">
+      <div class="tier-header ${HEADER_CLASS[t]}">${TROPHY[t] ? `<span class="trophy">${TROPHY[t]}</span>` : ''}${TIER_LABELS[t]}</div>
+      ${rowsHTML}
+    </div>`;
+  }).join('');
+}
+
+async function loadAndRender() {
+  // players.js dan bazaviy playerlar
+  const basePlayers = (window.UZTIERS_PLAYERS || [])
+    .filter(p => p.tiers && p.tiers.some(t => t.icon === MODE_ICON))
+    .map(p => ({ name: p.name, tier: p.tiers.find(t => t.icon === MODE_ICON).label, avatar: p.avatar }));
+
+  // Serverdan admin qo'shgan playerlar
+  let serverPlayers = [];
+  try {
+    const r = await fetch(API_URL + '?t=' + Date.now());
+    const data = await r.json();
+    if (Array.isArray(data)) {
+      serverPlayers = data
+        .filter(p => p.tiers && p.tiers.some(t => t.icon === MODE_ICON))
+        .map(p => ({ name: p.name, tier: p.tiers.find(t => t.icon === MODE_ICON).label, avatar: p.avatar }));
+    }
+  } catch(e) {
+    console.log('Server ulanmadi');
+  }
+
+  // Birlashtirish (dublikat yo'q)
+  const baseNames = basePlayers.map(p => p.name.trim().toLowerCase());
+  const combined = [
+    ...basePlayers,
+    ...serverPlayers.filter(p => !baseNames.includes(p.name.trim().toLowerCase()))
+  ];
+
+  render(combined);
+}
+
+loadAndRender();
+</script>
+</body>
+</html>

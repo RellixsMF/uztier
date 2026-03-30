@@ -202,13 +202,13 @@ window.UZTIERS_PLAYERS = [
   name: "itzRellixsMF",
     points: 26,
     rank: "Combat Ace",
-    avatar: "https://mytiers.ru/api/avatar/oleg_321f",
+    avatar: "https://render.crafty.gg/3d/bust/06ec3577-3299-45fa-bbdf-613b1f86c8ab",
     region: "AS",
     tiers: [
       { icon: "sword", label: "LT4" },
-      { icon:"uhc", label:"LT5"},
+      { icon:"uhc", label:"LT4"},
       { icon: "mace",    label: "LT4" },
-      {icon:"vanilla", label:"LT5"},
+      {icon:"vanilla", label:"LT4"},
       {icon:"axe", label:"LT4"},
       {icon:"pot", label:"LT4"}
 
@@ -338,7 +338,8 @@ window.UZTIERS_PLAYERS = [
         region: "AS",
         tiers: [
           {icon:"vanilla", label:"LT5"},
-          {icon:"mace", label:"HT5"}
+          {icon:"mace", label:"HT5"},
+          {icon:"sword", label:"HT5"},
         ]
     },
       {
@@ -406,7 +407,7 @@ window.UZTIERS_PLAYERS = [
       name: " Dezzijan",
         points: 1,
         rank: "Combat Cadet",
-        avatar: "https://mytiers.ru/api/avatar/dema11031103",
+        avatar: "modelpzds2.png",
         region: "AS",
         tiers: [
           {icon:"sword", label:"LT5"},
